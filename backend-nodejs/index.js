@@ -1,74 +1,94 @@
-// backend-nodejs/index.js
+// 1. Importação dos Módulos Necessários
 const express = require('express');
 const cors = require('cors');
-const multer = require('multer');
 const dotenv = require('dotenv');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
-const { SpeechClient } = require('@google-cloud/speech');
-const gTTS = require('gtts');
-const stream = require('stream');
-const util = require('util');
 
+// 2. Configuração Inicial
 dotenv.config();
-
 const app = express();
 const port = 3001;
 
-// Middlewares
+// 3. Middlewares
 app.use(cors());
-app.use(express.json()); // Essencial para receber JSON do frontend
+app.use(express.json());
 
-const upload = multer({ storage: multer.memoryStorage() });
+// --- BASE DE CONHECIMENTO DE PRODUTOS ---
+// Esta lista simula um "banco de dados" dos produtos em destaque na sua loja.
+// O assistente usará esta informação para responder aos clientes.
+const products = [
+    { name: 'Ideapad i5', category: 'Notebook', price: 'R$ 3.000', description: 'Um notebook versátil para trabalho e estudos, com processador Intel Core i5 e bom desempenho.' },
+    { name: 'Poco C65', category: 'Smartphone', price: 'R$ 3.000', description: 'Um smartphone com ótimo custo-benefício, tela grande e boa bateria para o dia a dia.' },
+    { name: 'Cloudmix', category: 'Headset Gamer', price: 'R$ 3.000', description: 'Headset para jogos da HyperX com áudio imersivo, confortável e microfone de alta qualidade.' },
+    { name: 'Mouse Gamer', category: 'Mouse', price: 'R$ 3.000', description: 'Mouse com sensor de alta precisão, design ergonômico e iluminação RGB para jogadores.' },
+    { name: 'Macbook Pro', category: 'Notebook Premium', price: 'Preço sob consulta', description: 'O notebook de alta performance da Apple, ideal para profissionais criativos, edição de vídeo e programação.' }
+];
 
-// --- Clientes das APIs do Google ---
+// Transforma a lista de produtos em um texto formatado para a IA entender.
+const productCatalog = products.map(p => `- ${p.name} (${p.category}): ${p.description}. Preço: ${p.price}.`).join('\n');
+
+
+// 4. Inicialização e Configuração do Cliente da API do Gemini
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
-const speechClient = new SpeechClient();
 
-// --- Endpoint de Áudio (Já existente, sem alterações) ---
-app.post('/api/process-audio', upload.single('audio'), async (req, res) => {
-    // ... seu código de processamento de áudio continua aqui ...
+// --- CONFIGURAÇÃO DA IA: INSTRUÇÃO DE SISTEMA (ATUALIZADA) ---
+const systemInstruction = {
+  role: "model",
+  parts: [{ text: `
+    Você é um assistente virtual especialista e amigável da "Click & Connect", uma loja de eletrônicos.
+    Sua principal função é ajudar os clientes a encontrar os melhores produtos para suas necessidades.
+    Seja sempre educado, prestativo e use uma linguagem clara.
+    
+    CRITICO: Você DEVE basear suas respostas e recomendações APENAS nos produtos da lista abaixo. Não invente produtos ou especificações.
+    
+    CATÁLOGO DE PRODUTOS DISPONÍVEIS:
+    ${productCatalog}
+
+    Se o cliente perguntar sobre algo que não está na lista, informe que no momento você só tem informações sobre os produtos em destaque e pergunte se ele tem interesse em algum deles.
+  `}],
+};
+
+const model = genAI.getGenerativeModel({
+  model: "gemini-1.5-flash-latest",
+  systemInstruction: systemInstruction,
 });
 
-// ==========================================================
-// ===== NOVO ENDPOINT PARA O CHAT DE TEXTO =====
-// ==========================================================
+
+// 5. Definição da Rota da API de Chat
 app.post('/api/chat', async (req, res) => {
   try {
-    // 1. Especificamos o modelo Gemini desejado
-    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-lite" }); 
-    // NOTA: Usei "gemini-1.5-flash-latest" que é o nome oficial atual para a família Flash.
-    // Se um modelo "2.5-flash-lite" for lançado, basta atualizar esta string.
+    console.log('>>> Requisição recebida no endpoint /api/chat.');
 
-    // 2. Recebemos a mensagem atual e o histórico do frontend
     const { message, history } = req.body;
 
     if (!message) {
       return res.status(400).json({ error: 'Nenhuma mensagem recebida.' });
     }
     
-    // 3. Iniciamos o chat com o histórico para que o Gemini tenha contexto
+    const generationConfig = {
+      temperature: 0.7,
+      maxOutputTokens: 500,
+    };
+    
     const chat = model.startChat({
-        history: history || [], // Usa o histórico recebido, se houver
-        generationConfig: {
-          maxOutputTokens: 500,
-        },
+        history: history || [],
+        generationConfig: generationConfig,
     });
 
-    // 4. Enviamos a nova mensagem para o Gemini
     const result = await chat.sendMessage(message);
     const response = result.response;
     const botResponseText = response.text();
 
-    // 5. Devolvemos a resposta do bot para o frontend
     res.json({ response: botResponseText });
 
   } catch (error) {
-    console.error("Erro no endpoint de chat:", error);
-    res.status(500).json({ error: "Ocorreu um erro ao processar sua mensagem." });
+    console.error('### ERRO DETALHADO NO ENDPOINT DE CHAT:', error);
+    res.status(500).json({ error: "Ocorreu um erro no servidor ao tentar processar sua mensagem." });
   }
 });
 
-
+// 6. Inicialização do Servidor
 app.listen(port, () => {
-  console.log(`Servidor backend rodando em http://localhost:${port}`);
+  console.log(`✅ Servidor backend de CHAT DE TEXTO rodando em http://localhost:${port}`);
 });
+
