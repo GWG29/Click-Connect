@@ -1,0 +1,422 @@
+/* frontend/src/HomePage.css */
+
+/* Estilos Globais e Variáveis */
+:root {
+  --dark-bg: #111418;
+  --light-bg: #f4f4f4;
+  --card-bg: #ffffff;
+  --primary-text: #212529;
+  --secondary-text: #6c757d;
+  --accent-color: #6f42c1;
+  --border-radius: 16px;
+  --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  background-color: var(--dark-bg);
+  color: var(--primary-text);
+}
+
+.homepage-container {
+  /* max-width: 1400px; */
+  margin: 20px auto;
+  padding: 24px;
+  background-color: var(--light-bg);
+  border-radius: var(--border-radius);
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  gap: 8px;
+}
+.logo-img {
+  height: 120px;
+  margin-right: 10px;
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+  font-size: 1.3rem;
+  font-weight: bold;
+  line-height: 1.1;
+}
+
+.logo-click {
+  color: #0069A7;
+}
+
+.logo-connect {
+  color: var(--primary-text);
+}
+
+.search-bar {
+  position: relative;
+  width: 50%;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 12px 20px;
+  border-radius: 25px;
+  border: 1px solid #ddd;
+  font-size: 1rem;
+}
+
+.search-icon {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--secondary-text);
+}
+
+.nav-icons {
+  display: flex;
+  gap: 20px;
+  font-size: 1.5rem;
+  color: var(--primary-text);
+}
+.nav-icon {
+  cursor: pointer;
+}
+
+/* Grid de Produtos */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+/* Card de Produto */
+.product-card {
+  background-color: var(--card-bg);
+  border-radius: var(--border-radius);
+  padding: 20px;
+  text-align: center;
+  box-shadow: var(--box-shadow);
+  transition: transform 0.2s ease-in-out;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+}
+
+.product-card h3 {
+  margin-top: 0;
+  font-size: 1.25rem;
+}
+
+.product-image-container {
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.product-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.product-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.product-dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #ddd;
+}
+.product-dots span.active {
+  background-color: var(--secondary-text);
+}
+
+.product-price {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--primary-text);
+  margin: 0;
+}
+
+/* Banner Promocional */
+.promo-banner {
+  position: relative;
+  background-color: #000;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  box-shadow: var(--box-shadow);
+}
+.banner-image {
+  width: 100%;
+  height: auto;
+  opacity: 0.7;
+}
+.banner-text {
+  position: absolute;
+  color: white;
+  font-size: 2.5rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  background: linear-gradient(45deg, #8a2be2, #4169e1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+
+/* Widget de Suporte */
+.support-widget {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 10px 15px;
+  border-radius: 25px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  backdrop-filter: blur(5px);
+}
+.support-icon-container {
+  background-color: var(--dark-bg);
+  color: white;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  cursor: pointer;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .search-bar {
+    width: 100%;
+  }
+}
+
+/* Para telas de tablets e celulares (largura máxima de 768px) */
+@media (max-width: 768px) {
+
+  /* Ajusta o container principal */
+  .homepage-container {
+    padding: 16px; /* Reduz o espaçamento nas laterais */
+  }
+  
+  /* Faz a navbar ficar na vertical */
+  .navbar {
+    flex-direction: column; /* Coloca logo, busca e ícones um embaixo do outro */
+    gap: 20px;
+  }
+
+  /* Faz a barra de busca ocupar toda a largura */
+  .search-bar {
+    width: 100%;
+  }
+
+  /* Ajusta o tamanho do texto do banner */
+  .banner-text {
+    font-size: 1.8rem; /* Diminui a fonte para não quebrar em telas pequenas */
+  }
+
+  /* Ajusta o texto do logo */
+  .logo-text {
+    font-size: 1rem;
+    text-align: center; /* Centraliza o texto do logo quando empilhado */
+  }
+}
+
+
+/* Para telas de celulares bem pequenas (largura máxima de 480px) */
+@media (max-width: 480px) {
+
+  .homepage-container {
+    padding: 10px;
+    margin: 10px;
+  }
+
+  /* Diminui ainda mais a fonte do banner */
+  .banner-text {
+    font-size: 1.5rem;
+  }
+
+  /* Esconde o texto do widget de suporte, deixando só o ícone */
+  .support-widget span {
+    display: none;
+  }
+  .support-widget {
+    padding: 0;
+    background-color: transparent;
+    backdrop-filter: none;
+    box-shadow: none;
+  }
+}
+
+/* frontend/src/HomePage.css */
+
+/* Adiciona um cursor ao widget de suporte para indicar que é clicável */
+.support-widget {
+  cursor: pointer;
+}
+
+/* Animação para a janela de chat aparecer */
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Estilos da Janela de Chat */
+.chat-window {
+  position: fixed;
+  bottom: 110px; /* Posição acima do widget de suporte */
+  right: 30px;
+  width: 350px;
+  height: 500px;
+  background-color: white;
+  border-radius: var(--border-radius);
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideUp 0.3s ease-out;
+  z-index: 1000;
+}
+
+.chat-header {
+  background-color: var(--dark-bg);
+  color: white;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chat-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.chat-close-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.chat-body {
+  flex-grow: 1;
+  padding: 15px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: #f9f9f9;
+}
+
+.message {
+  padding: 10px 15px;
+  border-radius: 18px;
+  max-width: 80%;
+  line-height: 1.4;
+}
+
+.message.bot {
+  background-color: #e9e9eb;
+  color: var(--primary-text);
+  align-self: flex-start; /* Mensagens do bot na esquerda */
+}
+
+.message.user {
+  background-color: #007bff;
+  color: white;
+  align-self: flex-end; /* Mensagens do usuário na direita */
+}
+
+.chat-footer {
+  padding: 10px;
+  display: flex;
+  gap: 10px;
+  border-top: 1px solid #ddd;
+}
+
+.chat-footer input {
+  flex-grow: 1;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  padding: 10px 15px;
+  font-size: 1rem;
+}
+
+.chat-send-btn {
+  background-color: var(--dark-bg);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* Indicador de "Digitando..." */
+.typing-indicator span {
+  height: 8px;
+  width: 8px;
+  background-color: #9E9EA1;
+  border-radius: 50%;
+  display: inline-block;
+  animation: bounce 1.4s infinite ease-in-out both;
+}
+
+.typing-indicator span:nth-of-type(1) { animation-delay: -0.32s; }
+.typing-indicator span:nth-of-type(2) { animation-delay: -0.16s; }
+
+@keyframes bounce {
+  0%, 80%, 100% { transform: scale(0); }
+  40% { transform: scale(1.0); }
+}
